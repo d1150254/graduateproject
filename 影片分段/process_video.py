@@ -1,4 +1,3 @@
-
 import cv2
 import numpy as np
 import os
@@ -218,9 +217,10 @@ def extract_features(video_path, yolo_model, pose_model, event_name=None):
         'open_package': 5,
         'oxy_machine': 4,
         'suck_machine': 3,
-        'suck_nose_neck_mouth': 6,
         'take_out_tube': 1,
         'wear_glove': 2,
+        'suck_nose': 6,
+        'suck_neck': 6,
     }
     target_class_id = class_id_map.get(event_name)
     
@@ -309,7 +309,8 @@ if __name__ == '__main__':
         "oxy_machine",
         "wear_glove",
         "take_out_tube",
-        "suck_nose_neck_mouth"
+        "suck_nose",
+        "suck_neck",
     ]
     
     # events = detect_video(
@@ -347,7 +348,10 @@ if __name__ == '__main__':
     # Process videos and store results
     all_predictions = []
     for event_name in event_names:
-        event_dir = os.path.join(output_dir, event_name)
+        if event_name == "suck_nose" or event_name == "suck_neck":
+            event_dir = os.path.join(output_dir, "suck_nose_neck_mouth")
+        else:
+            event_dir = os.path.join(output_dir, event_name)
         if not os.path.exists(event_dir) or event_name not in lstm_models:
             continue
 
